@@ -1,0 +1,1 @@
+export { WrongPage as default } from './WrongPage'

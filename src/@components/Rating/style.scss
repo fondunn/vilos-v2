@@ -1,0 +1,41 @@
+.ratingWrapper {
+  width: 150px;
+  height: 15px;
+  border: none;
+  outline: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin: 0;
+  padding: 0;
+  .star {
+    margin: 0;
+    padding: 0;
+    width: 150px;
+    font-size: 15px;
+    margin: 0;
+    padding: 0;
+    color: #f18b12;
+  }
+  .halfStar {
+    position: relative;
+    display: inline-block;
+    font-size: 15px;
+    color: #1086ad;
+    // overflow: hidden;
+    &::before {
+      display: block;
+      z-index: 1;
+      position: absolute;
+      top: 0;
+      width: 45%;
+      content: attr(data-content);
+      overflow: hidden;
+      color: #f18b12;
+    }
+  }
+  .emptyStar {
+    color: #1086ad;
+  }
+}
