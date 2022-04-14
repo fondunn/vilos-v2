@@ -1,7 +1,7 @@
 import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import { Box, Typography } from '@mui/material';
-import SearchForm from '@components/SearchForm';
+
 import { Link } from 'react-router-dom';
 function Header() {
   return (
@@ -11,7 +11,7 @@ function Header() {
           display: 'flex',
           height: '70px',
           alignItems: 'center',
-          backgroundColor: 'darkgrey'
+          backgroundColor: '#0A0A0D'
         }}
       >
         <Box
@@ -27,7 +27,8 @@ function Header() {
           </Link>
         </Box>
         <Box flexGrow={1}>
-          <SearchForm />
+          <Link to='/'>Home</Link>
+          <Link to='search'>Search Film</Link>
         </Box>
       </Box>
     </AppBar>

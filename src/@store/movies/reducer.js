@@ -1,4 +1,4 @@
-import { fetchMovies } from './actions'
+import { fetchMovies, setCurrentPage } from './actions'
 import { handleActions } from 'redux-actions'
 
 const INITIAL_STATE = {
@@ -13,7 +13,8 @@ const loading = state => {
   console.log('loading reducer started!')
   return {
     ...state,
-    isLoading: true
+    isLoading: true,
+    error: null
   }
 }
 
@@ -36,11 +37,19 @@ const fail = state => {
   }
 }
 
+const setPage = (state, action) => {
+  return {
+    ...state,
+    currentPage: action.payload
+  }
+}
+
 export const movies = handleActions(
   {
     [fetchMovies]: loading,
     [fetchMovies.success]: success,
     [fetchMovies.fail]: fail,
+    [setCurrentPage]: setPage
   },
   INITIAL_STATE
 )

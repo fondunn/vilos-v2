@@ -12,16 +12,17 @@
   .star {
     margin: 0;
     padding: 0;
-    width: 150px;
-    font-size: 15px;
+    font-size: 14px;
     margin: 0;
     padding: 0;
     color: #f18b12;
   }
   .halfStar {
+    margin: 0;
+  padding: 0;
     position: relative;
     display: inline-block;
-    font-size: 15px;
+    font-size: 14px;
     color: #1086ad;
     // overflow: hidden;
     &::before {
@@ -36,6 +37,9 @@
     }
   }
   .emptyStar {
+    margin: 0;
+  padding: 0;
     color: #1086ad;
+    font-size: 14px;
   }
 }

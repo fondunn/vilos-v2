@@ -5,7 +5,8 @@ import { Box, Button } from '@mui/material'
 export const CustomButton = ({
   title = 'Search',
   onClick = (() => { }),
-  size = 'small'
+  size = 'small',
+  style = ''
 }) => {
   return (
     <Box>
@@ -13,6 +14,11 @@ export const CustomButton = ({
         variant="contained"
         onClick={onClick}
         size={size}
+        type='submit'
+        classlist={style}
+        sx={{
+          backgroundColor: style
+        }}
       >
         {title}
       </Button>
