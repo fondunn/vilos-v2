@@ -19,3 +19,10 @@ a {
 .active {
   background-color: #fff;
 }
+
+.rootDiv {
+  min-height: 100vh;
+  background-color: gray;
+  max-width: 1000px;
+  width: 98vw;
+}

@@ -1,136 +1,177 @@
 import React, { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { fetchSingleMovie } from '@store/singleMovie/actions'
-import { removeFirst } from '@utils/const/removeFirst'
-import { getYear } from '@utils/const/getYear'
+import {
+  fetchSingleMovie,
+  resetSingleMovie,
+  fetchSingleMovieCast,
+  fetchSimilarMovies
+} from '@store/singleMovie/actions'
+import { removeFirst, getYear, minToHour } from '@utils/const'
 import cover from '@assets/cover.jpg'
 import { Box, Card, CardMedia, Typography } from '@mui/material'
-function DetailPage({ movie, getMovie, error }) {
-
-  // if (error !== null) return <p>Something went wrong...</p>
-
+import BackButton from '@components/BackButton/BackButton'
+import Spinner from '@components/Spinner'
+import CardListRow from '@components/CardListRow/CardListRow'
+import './styles.scss'
+import YouTube from 'react-youtube'
+function DetailPage({ movie, getMovie, getCast, error, resetData, isLoading, cast, getSimilarMovies, similarMovies }) {
   const { title,
     release_date,
     production_countries = [],
     genres = [], runtime,
-    poster_path = cover,
-    backdrop_path = cover,
-    overview
+    poster_path,
+    backdrop_path,
+    overview,
+    videos,
   } = movie
   const year = getYear(release_date)
-  const poster = 'https://image.tmdb.org/t/p/w500' + poster_path
-  const bigImage = 'https://image.tmdb.org/t/p/w1280' + backdrop_path
-  console.log(movie)
+  const poster = !poster_path ? cover : 'https://image.tmdb.org/t/p/w500' + poster_path
+  const bigImage = !backdrop_path ? null : 'https://image.tmdb.org/t/p/w1280' + backdrop_path
   const location = useLocation()
   const id = removeFirst(location.search)
-  const tagList = ['title', 'year', 'country', 'genre', 'runtime', 'cast']
+  const trailer = !videos ? null : videos.results.find(video => video.name === 'Official Trailer')
+  console.log(trailer)
   useEffect(() => {
     getMovie(id)
-  }, [])
-
+    getCast(id)
+    getSimilarMovies(id)
+    return () => {
+      resetData()
+    }
+  }, [id])
   return (
-
-
-    <Box sx={{
-      height: 'calc(100vh - 70px)',
-      display: 'flex',
-      alignItems: 'center',
-      backgroundImage: `url(${bigImage})`,
-      backgroundSize: 'cover'
-    }}>
+    <Box
+      className='detailPage'
+      sx={{ backgroundImage: `url(${null || bigImage})` }}>
+      <BackButton />
       {
         error ?
-          <p>Oops...</p>
+          <h1>Oops... Something went wrong</h1>
           :
-          <Box
-            sx={{
-              display: 'flex',
-              backgroundColor: 'rgba(0, 0, 0, .7)',
-              m: '16px',
-              p: '8px'
-            }}
-          >
-            <Card sx={{ width: 200 }}>
-              <CardMedia
-                component="img"
-                height="300"
-                image={poster}
-                alt={title}
-              />
-            </Card>
-            <Box sx={{ display: 'flex', flexDirection: 'column', width: '300px' }}>
-
-              <Box sx={{
-                display: 'flex',
-
-              }}>
-
-                <Box sx={{ width: '100px', ml: '10px' }}>
+          <Box className='detailPageWrapper'>
+            <Box className='detailPageContent'>
+              <Box className='infoBlock'>
+                <Card className='imgWrapper'>
                   {
-                    tagList.map((tag, id) => {
-                      if (id % 2 === 0) {
-
-                        return <Typography key={id} variant="body2" sx={{ backgroundColor: '#90a4ae', pl: '6px' }}>
-                          {tag}
-                        </Typography>
-
-                      } else return <Typography key={id} variant="body2" sx={{ pl: '6px' }}>
-                        {tag}
-                      </Typography>
-                    })
+                    isLoading ?
+                      <Spinner />
+                      :
+                      <CardMedia
+                        component="img"
+                        height="300"
+                        image={poster}
+                        alt={title}
+                        loading='lazy'
+                      />
                   }
-                </Box>
-
-                <Box>
-                  <Typography variant="body2" sx={{ backgroundColor: '#90a4ae' }}>
-                    {title}
-                  </Typography>
-                  <Typography variant="body2" >
-                    {year}
-                  </Typography>
-                  <Typography variant="body2" sx={{ backgroundColor: '#90a4ae' }}>
-                    {
-                      production_countries.map(country => (
-                        country.iso_3166_1
-                      ))
-                    }
-                  </Typography>
-                  <Typography variant="body2" >
-                    {
-                      genres.map(genre => (
-                        genre.name
-                      ))
-                    }
-                  </Typography>
-                  <Typography variant="body2" sx={{ backgroundColor: '#90a4ae' }}>
-                    {runtime}
-                  </Typography>
+                </Card>
+                <Box className='infoWrapper'>
+                  <Box className='info'>
+                    <Box className='infoRow cbg'>
+                      <Typography className='tag ' variant="body2">
+                        title
+                      </Typography>
+                      <Typography variant="body2" className='data'>
+                        {title}
+                      </Typography>
+                    </Box>
+                    <Box className='infoRow '>
+                      <Typography className='tag' variant="body2">
+                        year
+                      </Typography>
+                      <Typography variant="body2" className='data'>
+                        {year}
+                      </Typography>
+                    </Box>
+                    <Box className='infoRow cbg'>
+                      <Typography className='tag' variant="body2">
+                        country
+                      </Typography>
+                      <Typography variant="body2" className='data'>
+                        {
+                          production_countries.map(country => (
+                            <span className='genre'>{country.iso_3166_1}</span>
+                          ))
+                        }
+                      </Typography>
+                    </Box>
+                    <Box className='infoRow'>
+                      <Typography className='tag' variant="body2">
+                        genre
+                      </Typography>
+                      <Typography variant="body2" className='data'>
+                        {
+                          genres.map(genre => (
+                            <span key={genre} className='genre'>{genre.name}</span>
+                          ))
+                        }
+                      </Typography>
+                    </Box>
+                    <Box className='infoRow cbg'>
+                      <Typography className='tag ' variant="body2">
+                        runtime
+                      </Typography>
+                      <Typography variant="body2" className='data'>
+                        {minToHour(runtime)}
+                      </Typography>
+                    </Box>
+                    <Box className='infoRow'>
+                      <Typography className='tag' variant="body2">
+                        cast
+                      </Typography>
+                      <Typography variant="body2" className='data'>
+                        {
+                          cast.map(actor => (
+                            <p className='infoText'>{actor}</p>
+                          ))
+                        }
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Box className='overviewWrapper'>
+                    <Typography variant="body2" className='overview' >
+                      {overview}
+                    </Typography>
+                  </Box>
                 </Box>
 
               </Box>
-
-              <Box sx={{ m: '10px' }}>
-
-                <Typography variant="body2" >
-                  {overview}
-                </Typography>
-              </Box>
+              {
+                trailer ?
+                  <Box className='trailer'>
+                    <YouTube
+                      videoId={trailer.key}
+                    />
+                  </Box>
+                  : null
+              }
+            </Box>
+            <Box className='detailPageSimilarMovies'>
+              <Typography variant="body2">
+                Similar Movies
+              </Typography>
+              <CardListRow data={similarMovies} />
             </Box>
           </Box>
       }
     </Box>
-
   )
 }
 
 const mapStateToProps = state => ({
   movie: state.singleMovie.fetchedSingleMovie,
-  error: state.singleMovie.error
+  cast: state.singleMovie.cast,
+  similarMovies: state.singleMovie.similarMovies,
+  error: state.singleMovie.error,
+  isLoading: state.singleMovie.isLoading
 })
 
 const mapDispatchToProps = dispatch => ({
-  getMovie: id => dispatch(fetchSingleMovie(id))
+  getMovie: id => dispatch(fetchSingleMovie(id)),
+  getCast: id => dispatch(fetchSingleMovieCast(id)),
+  getSimilarMovies: id => dispatch(fetchSimilarMovies(id)),
+  resetData: () => dispatch(resetSingleMovie())
 })
 
 export default connect(

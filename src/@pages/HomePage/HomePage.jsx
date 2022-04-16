@@ -1,54 +1,53 @@
 import React, { useEffect } from 'react'
-
+import './styles.scss'
 import Spinner from '@components/Spinner'
 import Pagination from '@components/Pagination/Pagination'
 import CardList from '@components/CardList'
 import { Box } from '@mui/material'
 
 import { connect } from 'react-redux'
-import { fetchMovies } from '@store/movies/actions'
-
-
+import { createStructuredSelector } from 'reselect'
+import { fetchMovies, movies, isLoading, currentPage } from '@store/movies'
+import { usePrevious } from '@hooks'
 const HomePage = ({ movies, fetchMovies, isLoading, currentPage }) => {
+
+  const prevPage = usePrevious(currentPage)
+
   useEffect(() => {
 
-    fetchMovies(currentPage)
-
+    console.log(':::prev page :', prevPage)
+    console.log(':::current page :', currentPage)
+    if (movies.length === 0 || currentPage !== prevPage) {
+      fetchMovies(currentPage)
+    }
 
   }, [currentPage])
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'column',
-        minHeight: 'calc(100vh - 70px)',
-        backgroundColor: '#0A0A0D'
-      }}
-
-    >
-      {
-        movies.length === 0 || isLoading ?
-          <Spinner />
-          :
-          <CardList data={movies} />
-      }
-      <Pagination totalPages={17} currentPage={currentPage} />
+    <Box className='mainContainer'>
+      <Box className='content'>
+        {
+          movies.length === 0 || isLoading ?
+            <Spinner />
+            :
+            <CardList data={movies} />
+        }
+      </Box>
+      <Box className='pagination' >
+        <Pagination totalPages={17} currentPage={currentPage} />
+      </Box>
     </Box>
   )
 }
 
-const mapStateToProps = state => ({
-  movies: state.movies.fetchedMovies,
-  isLoading: state.movies.isLoading,
-  currentPage: state.movies.currentPage
+const mapStateToProps = createStructuredSelector({
+  movies,
+  isLoading,
+  currentPage,
 })
 
 const mapDispatchToProps = dispatch => ({
   fetchMovies: (page) => dispatch(fetchMovies(page)),
-
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage)

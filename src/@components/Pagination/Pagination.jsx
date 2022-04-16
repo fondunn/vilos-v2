@@ -6,9 +6,21 @@ import { setCurrentPage } from '@store/movies/actions'
 const Pagination = ({ totalPages, currentPage, setCurrentPage }) => {
   if (!totalPages) return <p>Empty pagination</p>
 
-  const first = () => setCurrentPage(1)
-  const prev = () => setCurrentPage(currentPage - 1)
-  const next = (num) => setCurrentPage(currentPage + num)
+  const toTop = () => {
+    window.scrollTo(0, 0)
+  }
+  const first = () => {
+    setCurrentPage(1)
+    toTop()
+  }
+  const prev = () => {
+    setCurrentPage(currentPage - 1)
+    toTop()
+  }
+  const next = (num) => {
+    setCurrentPage(currentPage + num)
+    toTop()
+  }
 
   return (
     <Box sx={{ display: 'flex' }}>

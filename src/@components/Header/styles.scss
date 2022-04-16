@@ -1,0 +1,14 @@
+.header {
+  display: flex;
+  height: 70px;
+  align-items: center;
+  background-color: #0A0A0D;
+}
+
+.buttonsContainer {
+  display: flex;
+
+  & button {
+    margin: 0 10px;
+  }
+}

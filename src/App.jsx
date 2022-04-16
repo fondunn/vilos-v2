@@ -15,12 +15,7 @@ import { Box } from '@mui/material'
 
 function App() {
   return (
-    <Box sx={{
-      minHeight: '100vh',
-      backgroundColor: 'gray',
-      maxWidth: '1000px',
-      width: '1000px',
-    }}>
+    <Box className='rootDiv'>
       <Header />
       <Routes>
         <Route path='/' element={<HomePage />} />

@@ -1,31 +1,24 @@
 import React from 'react'
 import CardItem from '@components/CardItem'
-
 import { Box, Grid } from '@mui/material'
-import { connect } from 'react-redux'
-
-
+import './styles.scss'
 const CardList = ({ data = [], message = 'Movies Empty' }) => {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        m: '20px 0 20px 0'
-      }}
-    >
+    <Box className='cardListContainer'>
       {
         data.length === 0 ?
           <p>{message}</p>
           :
-          <Grid container spacing={1}>
+          <Grid container rowSpacing={1}>
             {
               data.map((movie, id) => (
                 <Grid
                   key={id}
-                  item xs={3}
-                  sx={{ m: 0, display: 'flex', justifyContent: 'center' }}
+                  item
+                  xs={6}
+                  sm={4}
+                  md={3}
+                  className='cardListGrid'
                 >
                   <CardItem data={movie} />
                 </Grid>
@@ -37,9 +30,4 @@ const CardList = ({ data = [], message = 'Movies Empty' }) => {
   )
 }
 
-// const mapStateToProps = state => ({
-//   data: state.movies.fetchedMovies
-// })
-
-// export default connect(mapStateToProps)(CardList)
 export default CardList

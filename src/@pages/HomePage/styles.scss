@@ -1,0 +1,20 @@
+.mainContainer {
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: calc(100vh - 70px);
+  background-color: #0A0A0D;
+
+  .content {
+    min-height: calc(100vh - 120px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .pagination {
+    margin: 10px 0;
+  }
+}

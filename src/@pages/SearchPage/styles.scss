@@ -1,0 +1,14 @@
+.searchPageContainer {
+  min-height: calc(100vh - 70px);
+  padding-top: 20px;
+
+  .searchPageWrapper {
+    display: flex;
+    justify-content: center;
+
+    .searchForm {
+      display: flex;
+      align-items: center;
+    }
+  }
+}
