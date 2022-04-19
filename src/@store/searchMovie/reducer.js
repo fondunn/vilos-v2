@@ -1,4 +1,4 @@
-import { fetchSearchMovies } from './actions'
+import { fetchSearchMovies, resetSearch } from './actions'
 import { handleActions } from 'redux-actions'
 
 const INITIAL_STATE = {
@@ -7,7 +7,6 @@ const INITIAL_STATE = {
   error: null,
   totalPages: null,
   currentPage: 1,
-
 }
 
 const loading = state => {
@@ -36,12 +35,17 @@ const fail = state => {
     error: 'Request error...'
   }
 }
+const reset = () => {
+  return INITIAL_STATE
+
+}
 
 export const searchedMovies = handleActions(
   {
     [fetchSearchMovies]: loading,
     [fetchSearchMovies.success]: success,
     [fetchSearchMovies.fail]: fail,
+    [resetSearch]: reset,
   },
   INITIAL_STATE
 )

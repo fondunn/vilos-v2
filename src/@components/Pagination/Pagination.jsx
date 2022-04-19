@@ -4,7 +4,7 @@ import { Box, Button } from '@mui/material'
 import CustomButton from '@components/CustomButton'
 import { setCurrentPage } from '@store/movies/actions'
 const Pagination = ({ totalPages, currentPage, setCurrentPage }) => {
-  if (!totalPages) return <p>Empty pagination</p>
+  if (!totalPages) return null
 
   const toTop = () => {
     window.scrollTo(0, 0)

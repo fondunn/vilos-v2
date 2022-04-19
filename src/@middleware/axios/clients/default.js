@@ -24,7 +24,6 @@ const defaultClient = {
               append_to_response: 'videos'
             }
             req.url = 'https://api.themoviedb.org/3/' + req.url
-            console.log(req)
             return req
           }
           else {

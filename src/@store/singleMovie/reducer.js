@@ -88,18 +88,7 @@ const failSimilarMoviesHandler = (state, action) => {
 }
 
 const reset = state => {
-  return {
-    ...state,
-    fetchedSingleMovie: [],
-    similarMovies: [],
-    cast: [],
-    isLoading: false,
-    isLoadingCast: false,
-    isLoadingSimilarMovies: false,
-    error: null,
-    errorCast: null,
-    errorSimilarMovies: null,
-  }
+  return INITIAL_STATE
 }
 
 export const singleMovie = handleActions(

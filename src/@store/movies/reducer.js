@@ -10,7 +10,6 @@ const INITIAL_STATE = {
 }
 
 const loading = state => {
-  console.log('loading reducer started!')
   return {
     ...state,
     isLoading: true,

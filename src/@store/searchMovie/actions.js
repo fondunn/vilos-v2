@@ -1,6 +1,8 @@
 import { createRequestAction } from '../createRequestAction'
+import { createAction } from 'redux-actions'
 
 export const FETCH_SEARCH_MOVIES = 'FETCH_SEARCH_MOVIES'
+export const RESET_SEARCH_MOVIE = 'RESET_SEARCH_MOVIE'
 
 export const fetchSearchMovies = createRequestAction(FETCH_SEARCH_MOVIES, (title) => {
   return {
@@ -10,3 +12,4 @@ export const fetchSearchMovies = createRequestAction(FETCH_SEARCH_MOVIES, (title
     }
   }
 })
+export const resetSearch = createAction(RESET_SEARCH_MOVIE)

@@ -5,9 +5,14 @@ import {
   fetchSingleMovie,
   resetSingleMovie,
   fetchSingleMovieCast,
-  fetchSimilarMovies
-} from '@store/singleMovie/actions'
-import { removeFirst, getYear, minToHour } from '@utils/const'
+  fetchSimilarMovies,
+  cast,
+  fetchedSingleMovie,
+  similarMovies,
+  error,
+  isLoading
+} from '@store/singleMovie'
+import { removeFirst, getYear, minToHour, getPoster } from '@utils/const'
 import cover from '@assets/cover.jpg'
 import { Box, Card, CardMedia, Typography } from '@mui/material'
 import BackButton from '@components/BackButton/BackButton'
@@ -15,6 +20,7 @@ import Spinner from '@components/Spinner'
 import CardListRow from '@components/CardListRow/CardListRow'
 import './styles.scss'
 import YouTube from 'react-youtube'
+import { createStructuredSelector } from 'reselect'
 function DetailPage({ movie, getMovie, getCast, error, resetData, isLoading, cast, getSimilarMovies, similarMovies }) {
   const { title,
     release_date,
@@ -26,11 +32,11 @@ function DetailPage({ movie, getMovie, getCast, error, resetData, isLoading, cas
     videos,
   } = movie
   const year = getYear(release_date)
-  const poster = !poster_path ? cover : 'https://image.tmdb.org/t/p/w500' + poster_path
-  const bigImage = !backdrop_path ? null : 'https://image.tmdb.org/t/p/w1280' + backdrop_path
+  const poster = !poster_path ? cover : getPoster('medium', poster_path)
+  const bigImage = !backdrop_path ? null : getPoster('big', backdrop_path)
   const location = useLocation()
   const id = removeFirst(location.search)
-  const trailer = !videos ? null : videos.results.find(video => video.name === 'Official Trailer')
+  const trailer = !videos ? null : videos.results[0]
   console.log(trailer)
   useEffect(() => {
     getMovie(id)
@@ -91,7 +97,7 @@ function DetailPage({ movie, getMovie, getCast, error, resetData, isLoading, cas
                       <Typography variant="body2" className='data'>
                         {
                           production_countries.map(country => (
-                            <span className='genre'>{country.iso_3166_1}</span>
+                            <span className='genre' key={country.iso_3166_1}>{country.iso_3166_1}</span>
                           ))
                         }
                       </Typography>
@@ -103,7 +109,7 @@ function DetailPage({ movie, getMovie, getCast, error, resetData, isLoading, cas
                       <Typography variant="body2" className='data'>
                         {
                           genres.map(genre => (
-                            <span key={genre} className='genre'>{genre.name}</span>
+                            <span key={genre.name} className='genre'>{genre.name}</span>
                           ))
                         }
                       </Typography>
@@ -123,7 +129,7 @@ function DetailPage({ movie, getMovie, getCast, error, resetData, isLoading, cas
                       <Typography variant="body2" className='data'>
                         {
                           cast.map(actor => (
-                            <p className='infoText'>{actor}</p>
+                            <span key={actor} className='infoText'>{actor}</span>
                           ))
                         }
                       </Typography>
@@ -159,12 +165,12 @@ function DetailPage({ movie, getMovie, getCast, error, resetData, isLoading, cas
   )
 }
 
-const mapStateToProps = state => ({
-  movie: state.singleMovie.fetchedSingleMovie,
-  cast: state.singleMovie.cast,
-  similarMovies: state.singleMovie.similarMovies,
-  error: state.singleMovie.error,
-  isLoading: state.singleMovie.isLoading
+const mapStateToProps = createStructuredSelector({
+  movie: fetchedSingleMovie,
+  cast: cast,
+  similarMovies: similarMovies,
+  error: error,
+  isLoading: isLoading
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -4,23 +4,13 @@ import Spinner from '@components/Spinner'
 import Pagination from '@components/Pagination/Pagination'
 import CardList from '@components/CardList'
 import { Box } from '@mui/material'
-
 import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
-import { fetchMovies, movies, isLoading, currentPage } from '@store/movies'
-import { usePrevious } from '@hooks'
-const HomePage = ({ movies, fetchMovies, isLoading, currentPage }) => {
+import { fetchMovies, movies, isLoading, currentPage, totalPages } from '@store/movies'
 
-  const prevPage = usePrevious(currentPage)
-
+const HomePage = ({ movies, fetchMovies, isLoading, currentPage, totalPages }) => {
   useEffect(() => {
-
-    console.log(':::prev page :', prevPage)
-    console.log(':::current page :', currentPage)
-    if (movies.length === 0 || currentPage !== prevPage) {
-      fetchMovies(currentPage)
-    }
-
+    fetchMovies(currentPage)
   }, [currentPage])
 
   return (
@@ -34,16 +24,17 @@ const HomePage = ({ movies, fetchMovies, isLoading, currentPage }) => {
         }
       </Box>
       <Box className='pagination' >
-        <Pagination totalPages={17} currentPage={currentPage} />
+        <Pagination totalPages={totalPages} currentPage={currentPage} />
       </Box>
     </Box>
   )
 }
 
 const mapStateToProps = createStructuredSelector({
-  movies,
-  isLoading,
-  currentPage,
+  movies: movies,
+  isLoading: isLoading,
+  currentPage: currentPage,
+  totalPages: totalPages,
 })
 
 const mapDispatchToProps = dispatch => ({

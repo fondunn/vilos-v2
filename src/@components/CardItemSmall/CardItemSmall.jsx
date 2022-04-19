@@ -1,10 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Box, Card, CardMedia, Typography, CardContent } from '@mui/material'
+import { Box, Card, CardMedia } from '@mui/material'
 import cover from '@assets/cover.jpg'
+import { getPoster } from '@utils/const'
 const CardItemSmall = ({ imgPath, id, title }) => {
   const link = `/detail/${title}/?${id}`
-  const poster = `http://image.tmdb.org/t/p/w185${imgPath}`
+  const poster = getPoster('small', imgPath)
   return (
     <Link to={link}>
       <Box>
@@ -16,11 +17,6 @@ const CardItemSmall = ({ imgPath, id, title }) => {
             image={poster || cover}
             loading='lazy'
           />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              {title}
-            </Typography>
-          </CardContent>
         </Card>
       </Box>
     </Link>

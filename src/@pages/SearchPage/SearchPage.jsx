@@ -1,16 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './styles.scss'
 import CustomButton from '@components/CustomButton';
 import CardList from '@components/CardList';
 import { Box, TextField } from '@mui/material'
 import { connect } from 'react-redux'
-import { fetchSearchMovies } from '@store/searchMovie/actions'
+import { fetchSearchMovies, movies, resetSearch, isLoading } from '@store/searchMovie'
+import Spinner from '@components/Spinner'
+import { createStructuredSelector } from 'reselect';
 
-const SearchPage = ({ searchedMovies, getSearchedMovies }) => {
+const SearchPage = ({ movies, getSearchedMovies, resetSearch, isLoading }) => {
   const onFormSubmit = e => {
     e.preventDefault()
     getSearchedMovies(e.target[0].value)
   }
+
+  useEffect(() => {
+    return () => {
+      resetSearch()
+    }
+  }, [])
 
   return (
     <Box className='searchPageContainer'>
@@ -31,18 +39,24 @@ const SearchPage = ({ searchedMovies, getSearchedMovies }) => {
         </Box>
       </Box>
       <Box>
-        <CardList data={searchedMovies} message={'Enter Movie Title'} />
+        {
+          isLoading ?
+            <Spinner /> :
+            <CardList data={movies} message={'Enter Movie Title'} />
+        }
       </Box>
     </Box>
   )
 }
 
-const mapStateToProps = (state) => ({
-  searchedMovies: state.searchedMovies.fetchedSearchedMovies
+const mapStateToProps = createStructuredSelector({
+  movies: movies,
+  isLoading: isLoading
 })
 
 const mapDispatchToProps = dispatch => ({
-  getSearchedMovies: title => dispatch(fetchSearchMovies(title))
+  getSearchedMovies: title => dispatch(fetchSearchMovies(title)),
+  resetSearch: () => dispatch(resetSearch())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchPage)
